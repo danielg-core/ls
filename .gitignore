@@ -1,0 +1,16 @@
+/web/bundles/
+/app/bootstrap*
+/app/cache/*
+/app/logs/*
+/vendor/
+/app/config/parameters.yml
+/web/tests/
+
+# - IDE specific files
+# Eclipse
+/.project
+/.settings/
+/.buildpath
+
+# Netbeans
+/nbproject
