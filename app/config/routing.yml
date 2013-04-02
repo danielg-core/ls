@@ -1,0 +1,4 @@
+ls_main:
+    resource: "@LSMainBundle/Resources/config/routing.yml"
+    prefix:   /
+

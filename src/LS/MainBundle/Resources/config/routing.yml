@@ -1,0 +1,17 @@
+LSMainBundle_homepage:
+    pattern:  /
+    defaults: { _controller: LSMainBundle:Page:index }
+    requirements:
+        _method:  GET
+
+LSMainBundle_contact:
+    pattern:  /contact
+    defaults: { _controller: LSMainBundle:Page:contact }
+    requirements:
+        _method:  GET
+
+LSMainBundle_signup:
+    pattern:  /signup
+    defaults: { _controller: LSMainBundle:User:signup }
+    requirements:
+        _method:  GET|POST

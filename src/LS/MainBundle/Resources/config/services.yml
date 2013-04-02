@@ -1,0 +1,7 @@
+parameters:
+#    ls_main.example.class: LS\MainBundle\Example
+
+services:
+#    ls_main.example:
+#        class: %ls_main.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
