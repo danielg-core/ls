@@ -1,0 +1,4 @@
+parameters:
+    # LS Accounts email address
+    ls_main.emails.account.from: account-noreply@ls.com
+    ls_main.emails.account.to: tudz_h@yahoo.com

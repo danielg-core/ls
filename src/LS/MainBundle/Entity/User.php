@@ -4,13 +4,20 @@ namespace LS\MainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("email")
+ * @UniqueEntity("username")
  */
 
-class User
+class User implements UserInterface 
 {
     /**
      * @ORM\Id
@@ -20,7 +27,9 @@ class User
     protected $id;
     
     /**
-     * @ORM\Column(type="string")
+     * @var string $username
+     *
+     * @ORM\Column(name="username", type="string", length=255, unique=true) 
      */
     protected $username;
 
@@ -30,7 +39,9 @@ class User
     protected $password;
 
     /**
-     * @ORM\Column(type="string")
+     * @var string $email
+     *
+     * @ORM\Column(name="email", type="string", length=255, unique=true) 
      */
     protected $email; 
 
@@ -44,10 +55,16 @@ class User
      */
     protected $updated;
     
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $salt;
+    
     public function __construct()
     {
         $this->setCreated(new \DateTime());
-        $this->setUpdated(new \DateTime());
+        $this->setUpdated(new \DateTime()); 
+        $this->salt = md5(uniqid(null, true));
     }
 
     /**
@@ -90,7 +107,7 @@ class User
      * @return User
      */
     public function setPassword($password)
-    {
+    { 
         $this->password = $password;
     
         return $this;
@@ -181,5 +198,55 @@ class User
     public function getUpdated()
     {
         return $this->updated;
+    }
+    
+    
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('username', new Assert\NotBlank()); 
+          
+        $metadata->addPropertyConstraint('password', new Assert\Length(array(
+            'min'        => 4, 
+            'minMessage' => 'Your password must be at least {{ limit }} characters length', 
+        )));
+        
+        $metadata->addPropertyConstraint('email', new Assert\Email(array(
+            'message' => 'The email "{{ value }}" is not a valid email.',
+            'checkMX' => true,
+        )));        
+          
+    }
+    
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+     
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    
+        return $this;
+    }
+
+    /**
+     * Get salt
+     *
+     * @return string 
+     */
+    public function getSalt()
+    {
+        return $this->salt;
     }
 }
